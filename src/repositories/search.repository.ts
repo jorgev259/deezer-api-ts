@@ -1,42 +1,43 @@
 import got from 'got'
 import { SearchAlbumResponse } from '../responses/search-album.response'
 import { SearchArtistResponse } from '../responses/search-artist.response'
-import { SearchTrackResponse } from '../responses/search-track.response'
 import { SearchPlaylistResponse } from '../responses/search-playlist.response'
 import { SearchPodcastResponse } from '../responses/search-podcast.response'
+import { SearchTrackResponse } from '../responses/search-track.response'
+import { Paginable } from '../typings'
 
 export function searchAlbums(
   query: string|Query, 
   parameters?: OptionalParameters
-): Promise<Response<SearchAlbumResponse>> {
+): Promise<Paginable<SearchAlbumResponse>> {
   return request<SearchAlbumResponse>('album', query, parameters)
 }
 
 export function searchArtists(
   query: string|Query, 
   parameters?: OptionalParameters
-): Promise<Response<SearchArtistResponse>> {
+): Promise<Paginable<SearchArtistResponse>> {
   return request<SearchArtistResponse>('artist', query, parameters)
 }
 
 export function searchTracks(
   query: string|Query, 
   parameters?: OptionalParameters
-): Promise<Response<SearchTrackResponse>> {
+): Promise<Paginable<SearchTrackResponse>> {
   return request<SearchTrackResponse>('track', query, parameters)
 }
 
 export function searchPlaylists(
   query: string|Query, 
   parameters?: OptionalParameters
-): Promise<Response<SearchPlaylistResponse>> {
+): Promise<Paginable<SearchPlaylistResponse>> {
   return request<SearchPlaylistResponse>('playlist', query, parameters)
 }
 
 export function searchPodcasts(
   query: string|Query, 
   parameters?: OptionalParameters
-): Promise<Response<SearchPodcastResponse>> {
+): Promise<Paginable<SearchPodcastResponse>> {
   return request<SearchPodcastResponse>('playlist', query, parameters)
 }
 
@@ -71,24 +72,11 @@ interface Query {
   bpm_max?: number
 }
 
-interface ResponseError {
-  type: string
-  message: string
-}
-
-interface Response<T> {
-  data: T[]
-  total: number
-  prev?: string
-  next?: string
-  error?: ResponseError
-}
-
 async function request<T>(
   segment: string,
   query: string|Query,
   parameters?: OptionalParameters
-): Promise<Response<T>> {
+): Promise<Paginable<T>> {
   const q = typeof query === 'string' ? query : formatQuery(query)
   const searchParams = { ...parameters, q }
   return got('https://api.deezer.com/search/' + segment, { searchParams }).json()
