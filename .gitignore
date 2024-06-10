@@ -2,7 +2,7 @@
 node_modules/
 
 # generate output
-dist
+# dist
 local
 
 # yarn v2
