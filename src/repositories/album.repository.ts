@@ -8,8 +8,9 @@ export function getAlbum(albumId: number): Promise<AlbumResponse> {
   return got(`https://api.deezer.com/album/${albumId}`).json()
 }
 
-export function getAlbumTracks(albumId: number): Promise<Paginable<AlbumTracksResponse>> {
-  return got(`https://api.deezer.com/album/${albumId}/tracks`).json()
+export async function getAlbumTracks(albumId: number, index: number = 0): Promise<Paginable<AlbumTracksResponse>> {
+  const searchParams = { index }
+  return got(`https://api.deezer.com/album/${albumId}/tracks`, { searchParams }).json()
 }
 
 export function getAlbumFans(albumId: number): Promise<Paginable<AlbumFansResponse>> {
